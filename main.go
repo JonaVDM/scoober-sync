@@ -17,7 +17,8 @@ func main() {
 		log.Fatal("Email or password not defined")
 	}
 
-	_, err := scoober.NewScoober(*email, *password)
+	Scoober := scoober.NewScoober()
+	err := Scoober.Login(*email, *password)
 	if err != nil {
 		log.Fatal(err)
 		return
