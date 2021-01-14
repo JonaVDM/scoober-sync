@@ -3,23 +3,17 @@ package scoober
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
-type loginResponse struct {
-	Token string `json:"accessToken"`
+// Scoober is the main scoober account object
+type Scoober struct {
+	Token string
 }
 
-var token string
-
-// Login signs you into your scoober account and gives back the
-// token, the token is also stored in the state of the application
-func Login(email string, password string) (string, error) {
-	fmt.Println(email)
-	fmt.Println(password)
-
+// NewScoober lets you login to your account
+func NewScoober(email string, password string) (*Scoober, error) {
 	postBody, err := json.Marshal(map[string]string{
 		"userName": email,
 		"password": password,
@@ -28,27 +22,32 @@ func Login(email string, password string) (string, error) {
 	reqBody := bytes.NewBuffer(postBody)
 
 	if err != nil {
-		return "", err
+		return &Scoober{}, err
 	}
 
 	resp, err := http.Post("https://shiftplanning-api.scoober.com/login", "application/json", reqBody)
 	if err != nil {
-		return "", err
+		return &Scoober{}, err
 	}
-
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return &Scoober{}, err
+	}
+
+	type loginResponse struct {
+		Token string `json:"accessToken"`
 	}
 
 	sb := string(body)
 	data := loginResponse{}
 	err = json.Unmarshal([]byte(sb), &data)
 	if err != nil {
-		return "", err
+		return &Scoober{}, err
 	}
 
-	return data.Token, nil
+	return &Scoober{
+		data.Token,
+	}, nil
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"log"
 	"os"
 
@@ -9,16 +9,17 @@ import (
 )
 
 func main() {
-	fmt.Println("hi")
+	email := flag.String("email", os.Getenv("SCOOBER_EMAIL"), "The email of your scoober account")
+	password := flag.String("password", os.Getenv("SCOOBER_PASSWORD"), "The password of your scoober account")
+	flag.Parse()
 
-	email := os.Getenv("SCOOBER_EMAIL")
-	password := os.Getenv("SCOOBER_PASSWORD")
+	if *email == "" || *password == "" {
+		log.Fatal("Email or password not defined")
+	}
 
-	token, err := scoober.Login(email, password)
+	_, err := scoober.NewScoober(*email, *password)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-
-	log.Println(token)
 }
