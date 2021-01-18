@@ -1,6 +1,7 @@
 package scoober_test
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,43 +10,8 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-	failResponse := `{
-    "message": "not authorized",
-    "response": {
-        "header": {
-            "success": false,
-            "dateTime": "Thu Jan 14 16:05:04 GMT 2021",
-            "errorCodes": [
-                "2003",
-                "The username or password is invalid"
-            ]
-        }
-    },
-    "status": 401
-	}
-	`
-	successResponse := `{
-    "userId": 30123,
-    "firstName": "first name",
-    "lastName": "last name",
-    "email": "test@mail.com",
-    "userName": "test@mail.com",
-    "regionPrefix": "nl:groningen",
-    "jobFilter": "FOOD_DELIVERY",
-    "accessToken": "aabbcc",
-    "accountName": null,
-    "accountType": 1,
-    "street": "Steentilstraat",
-    "houseNumber": "42",
-    "zipCode": "9711 GP",
-    "city": "groningen",
-    "phoneNumber": "0031612345678",
-    "isWorking": false,
-    "paused": false,
-    "countryCode": "nl",
-    "chain": null,
-    "contractType": 0
-	}`
+	failResponse, _ := ioutil.ReadFile("testdata/login_fail.json")
+	successResponse, _ := ioutil.ReadFile("testdata/login.json")
 
 	t.Run("Fail when the server is not reachable", func(t *testing.T) {
 		scoober := Scoober{

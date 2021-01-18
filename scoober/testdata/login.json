@@ -1,0 +1,22 @@
+{
+    "userId": 30123,
+    "firstName": "first name",
+    "lastName": "last name",
+    "email": "test@mail.com",
+    "userName": "test@mail.com",
+    "regionPrefix": "nl:groningen",
+    "jobFilter": "FOOD_DELIVERY",
+    "accessToken": "aabbcc",
+    "accountName": null,
+    "accountType": 1,
+    "street": "Steentilstraat",
+    "houseNumber": "42",
+    "zipCode": "9711 GP",
+    "city": "groningen",
+    "phoneNumber": "0031612345678",
+    "isWorking": false,
+    "paused": false,
+    "countryCode": "nl",
+    "chain": null,
+    "contractType": 0
+}

@@ -1,0 +1,14 @@
+{
+    "message": "not authorized",
+    "response": {
+        "header": {
+            "success": false,
+            "dateTime": "Thu Jan 14 16:05:04 GMT 2021",
+            "errorCodes": [
+                "2003",
+                "The username or password is invalid"
+            ]
+        }
+    },
+    "status": 401
+}
