@@ -21,6 +21,12 @@ func main() {
 	err := Scoober.Login(*email, *password)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
+
+	shifts, err := Scoober.GetShifts("2021-01-01", "2021-01-15")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(shifts[0].Date)
 }
