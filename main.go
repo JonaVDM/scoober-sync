@@ -5,7 +5,9 @@ import (
 	"log"
 	"os"
 
+	"github.com/jonavdm/scoober-sync/googleapi"
 	"github.com/jonavdm/scoober-sync/scoober"
+	"google.golang.org/api/calendar/v3"
 )
 
 func main() {
@@ -17,16 +19,20 @@ func main() {
 		log.Fatal("Email or password not defined")
 	}
 
+	client, err := googleapi.GetClient()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = calendar.New(client)
+	if err != nil {
+		log.Fatalf("Unable to retrieve Calendar client: %v", err)
+	}
+
 	Scoober := scoober.NewScoober()
-	err := Scoober.Login(*email, *password)
+	err = Scoober.Login(*email, *password)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	shifts, err := Scoober.GetShifts("2021-01-01", "2021-01-15")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Print(shifts[0].Date)
 }
