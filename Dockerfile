@@ -6,5 +6,6 @@ RUN go install -v ./...
 
 FROM alpine
 COPY --from=builder /go/bin/scoober-sync /bin/scoober-sync
+COPY --from=builder /go/bin/scoober-init /bin/scoober-init
 ENV DATA "/data"
 CMD ["scoober-sync"]
