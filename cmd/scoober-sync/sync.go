@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/jonavdm/scoober-sync/googleapi"
-	"github.com/jonavdm/scoober-sync/scoober"
+	"github.com/jonavdm/scoober-sync/internal/googleapi"
+	"github.com/jonavdm/scoober-sync/internal/scoober"
 	"google.golang.org/api/calendar/v3"
 )
 
