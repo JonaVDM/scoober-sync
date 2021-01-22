@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	. "github.com/jonavdm/scoober-sync/scoober"
+	. "github.com/jonavdm/scoober-sync/internal/scoober"
 )
 
 func TestLogin(t *testing.T) {

@@ -7,5 +7,5 @@ This app requires you to have `SCOOBER_EMAIL` and `SCOOBER_PASSWORD`
 in your env variables.
 
 You will also need a google api app with the calendar api enabled.
-Place the `credentials.json` file in the working directory. Or
-whatever you have set in the environment variable `DATA`.
+Place the `credentials.json` file in the working directory/config. Or
+whatever you have set in the environment variable `SCOOBER_CONFIG`.
