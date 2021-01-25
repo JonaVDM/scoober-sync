@@ -6,4 +6,5 @@ import "golang.org/x/oauth2"
 type Config struct {
 	ScooberToken string
 	GoogleToken  *oauth2.Token
+	CalendarID   string
 }
