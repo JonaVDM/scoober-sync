@@ -37,10 +37,18 @@ func Setup() error {
 
 	fmt.Print("\n\n")
 
+	hook, err := setupDiscordWebhook()
+	if err != nil {
+		return err
+	}
+
+	fmt.Print("\n\n")
+
 	config := Config{
 		ScooberToken: scb,
 		GoogleToken:  gtk,
 		CalendarID:   calID,
+		DiscordHook:  hook,
 	}
 
 	err = config.Save()
@@ -130,6 +138,14 @@ func setupScoober() (string, error) {
 	return client.Token, err
 }
 
-func setupTiming() {
+func setupDiscordWebhook() (string, error) {
+	fmt.Println("Add in discord webhook (hit enter to skip)")
+	fmt.Println("https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks")
 
+	var hook string
+	if _, err := fmt.Scan(&hook); err != nil {
+		return "", err
+	}
+
+	return hook, nil
 }

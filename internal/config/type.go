@@ -7,4 +7,5 @@ type Config struct {
 	ScooberToken string
 	GoogleToken  *oauth2.Token
 	CalendarID   string
+	DiscordHook  string
 }
