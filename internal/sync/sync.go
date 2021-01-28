@@ -2,7 +2,6 @@ package sync
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -35,8 +34,6 @@ func Sync() error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(shifts)
 
 	google, err := config.GetGoogleConfig()
 	if err != nil {
@@ -83,6 +80,20 @@ func Sync() error {
 					End:         &googleCal.EventDateTime{DateTime: shift.To},
 				},
 			).Do()
+
+			continue
+		}
+
+		sStart, _ := time.Parse(time.RFC3339, shift.FromWithTimeZone)
+		eStart, _ := time.Parse(time.RFC3339, event.Start.DateTime)
+
+		sEnd, _ := time.Parse(time.RFC3339, shift.ToWithTimeZone)
+		eEnd, _ := time.Parse(time.RFC3339, event.End.DateTime)
+
+		if eStart != sStart || eEnd != sEnd {
+			event.Start = &googleCal.EventDateTime{DateTime: shift.From}
+			event.End = &googleCal.EventDateTime{DateTime: shift.To}
+			calendar.Events.Update(conf.CalendarID, event.Id, event).Do()
 		}
 	}
 
