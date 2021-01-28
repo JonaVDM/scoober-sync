@@ -3,6 +3,7 @@ package sync
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/jonavdm/scoober-sync/internal/config"
@@ -49,13 +50,66 @@ func Sync() error {
 
 	events, err := calendar.Events.List(conf.CalendarID).ShowDeleted(false).
 		SingleEvents(true).TimeMin(monday.Format(time.RFC3339)).
-		TimeMax(sunday.Format(time.RFC3339)).MaxResults(10).OrderBy("startTime").Do()
+		TimeMax(sunday.Format(time.RFC3339)).OrderBy("startTime").Do()
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(events)
+	for _, event := range events.Items {
+		id := strings.Split(event.Description, "\n")[0]
+		if id == "" {
+			continue
+		}
+
+		shift := findShift(&shifts, id)
+		if shift == nil {
+			if err := calendar.Events.Delete(conf.CalendarID, event.Id).Do(); err != nil {
+				return err
+			}
+		}
+	}
+
+	for _, shift := range shifts {
+		event := findEvent(events, shift.ID)
+
+		if event == nil {
+			calendar.Events.Insert(
+				conf.CalendarID,
+				&googleCal.Event{
+					Description: shift.ID,
+					Summary:     "Work Thuisbezorgd",
+					Start:       &googleCal.EventDateTime{DateTime: shift.From},
+					End:         &googleCal.EventDateTime{DateTime: shift.To},
+				},
+			).Do()
+		}
+	}
+
+	return nil
+}
+
+func findEvent(events *googleCal.Events, shiftID string) *googleCal.Event {
+	for _, event := range events.Items {
+		id := strings.Split(event.Description, "\n")[0]
+		if id == "" {
+			continue
+		}
+
+		if id == shiftID {
+			return event
+		}
+	}
+
+	return nil
+}
+
+func findShift(shifts *[]scoober.Shift, id string) *scoober.Shift {
+	for _, shift := range *shifts {
+		if shift.ID == id {
+			return &shift
+		}
+	}
 
 	return nil
 }
