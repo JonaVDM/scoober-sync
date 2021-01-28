@@ -2,6 +2,7 @@ package sync
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -11,10 +12,10 @@ import (
 )
 
 // Sync will sync scoober with google
-func Sync() error {
+func Sync() (*Log, error) {
 	conf, err := config.Load()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	now := time.Now()
@@ -32,17 +33,17 @@ func Sync() error {
 
 	shifts, err := scb.GetShifts(monday.Format("2006-01-02"), sunday.Format("2006-01-02"))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	google, err := config.GetGoogleConfig()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	calendar, err := googleCal.New(google.Client(context.Background(), conf.GoogleToken))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	events, err := calendar.Events.List(conf.CalendarID).ShowDeleted(false).
@@ -50,8 +51,10 @@ func Sync() error {
 		TimeMax(sunday.Format(time.RFC3339)).OrderBy("startTime").Do()
 
 	if err != nil {
-		return err
+		return nil, err
 	}
+
+	log := newLog()
 
 	for _, event := range events.Items {
 		id := strings.Split(event.Description, "\n")[0]
@@ -62,13 +65,21 @@ func Sync() error {
 		shift := findShift(&shifts, id)
 		if shift == nil {
 			if err := calendar.Events.Delete(conf.CalendarID, event.Id).Do(); err != nil {
-				return err
+				return nil, err
 			}
+
+			sStart, _ := time.Parse(time.RFC3339, event.Start.DateTime)
+			sEnd, _ := time.Parse(time.RFC3339, event.End.DateTime)
+
+			log.Deleted = append(log.Deleted, fmt.Sprintf("%s - %s", sStart.Format(time.Stamp), sEnd.Format(time.Stamp)))
 		}
 	}
 
 	for _, shift := range shifts {
 		event := findEvent(events, shift.ID)
+
+		sStart, _ := time.Parse(time.RFC3339, shift.FromWithTimeZone)
+		sEnd, _ := time.Parse(time.RFC3339, shift.ToWithTimeZone)
 
 		if event == nil {
 			calendar.Events.Insert(
@@ -81,23 +92,24 @@ func Sync() error {
 				},
 			).Do()
 
+			log.Added = append(log.Added, fmt.Sprintf("%s - %s", sStart.Format(time.Stamp), sEnd.Format(time.Stamp)))
+
 			continue
 		}
 
-		sStart, _ := time.Parse(time.RFC3339, shift.FromWithTimeZone)
 		eStart, _ := time.Parse(time.RFC3339, event.Start.DateTime)
-
-		sEnd, _ := time.Parse(time.RFC3339, shift.ToWithTimeZone)
 		eEnd, _ := time.Parse(time.RFC3339, event.End.DateTime)
 
 		if eStart != sStart || eEnd != sEnd {
 			event.Start = &googleCal.EventDateTime{DateTime: shift.From}
 			event.End = &googleCal.EventDateTime{DateTime: shift.To}
 			calendar.Events.Update(conf.CalendarID, event.Id, event).Do()
+
+			log.Updated = append(log.Updated, fmt.Sprintf("%s - %s", sStart.Format(time.Stamp), sEnd.Format(time.Stamp)))
 		}
 	}
 
-	return nil
+	return log, err
 }
 
 func findEvent(events *googleCal.Events, shiftID string) *googleCal.Event {
