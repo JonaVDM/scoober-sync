@@ -8,4 +8,6 @@ FROM alpine
 COPY --from=builder /go/bin/scoober-sync /bin/scoober-sync
 COPY --from=builder /go/bin/scoober-init /bin/scoober-init
 ENV SCOOBER_CONFIG "/config"
-CMD ["scoober-sync"]
+COPY crontab /crontab
+RUN /usr/bin/crontab /crontab
+CMD ["/usr/sbin/crond", "-f"]

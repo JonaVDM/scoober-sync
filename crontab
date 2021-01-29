@@ -1,0 +1,1 @@
+10 */1 * * * /bin/scoober-sync >> /var/log/scoober-sync.log

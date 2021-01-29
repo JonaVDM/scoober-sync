@@ -92,7 +92,7 @@ func Sync() (*Log, error) {
 		eStart, _ := time.Parse(time.RFC3339, event.Start.DateTime)
 		eEnd, _ := time.Parse(time.RFC3339, event.End.DateTime)
 
-		if eStart != sStart || eEnd != sEnd {
+		if !eStart.Equal(sStart) || !eEnd.Equal(sEnd) {
 			event.Start = &googleCal.EventDateTime{DateTime: shift.From}
 			event.End = &googleCal.EventDateTime{DateTime: shift.To}
 			calendar.Events.Update(conf.CalendarID, event.Id, event).Do()
@@ -137,7 +137,7 @@ func getDates() (time.Time, time.Time) {
 		dayOfWeek = 7
 	}
 
-	monday := now.AddDate(0, 0, -dayOfWeek+1)
+	monday := now.AddDate(0, 0, -dayOfWeek-6)
 	sunday := now.AddDate(0, 0, 7-dayOfWeek+7)
 
 	monday = time.Date(monday.Year(), monday.Month(), monday.Day(), 0, 0, 0, 0, monday.Location())
