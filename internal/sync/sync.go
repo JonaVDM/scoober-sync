@@ -18,15 +18,7 @@ func Sync() (*Log, error) {
 		return nil, err
 	}
 
-	now := time.Now()
-
-	dayOfWeek := int(now.Weekday())
-	if dayOfWeek == 0 {
-		dayOfWeek = 7
-	}
-
-	monday := now.AddDate(0, 0, -dayOfWeek+1)
-	sunday := now.AddDate(0, 0, 7-dayOfWeek+7)
+	monday, sunday := getDates()
 
 	scb := scoober.NewScoober()
 	scb.Token = conf.ScooberToken
@@ -135,4 +127,21 @@ func findShift(shifts *[]scoober.Shift, id string) *scoober.Shift {
 	}
 
 	return nil
+}
+
+func getDates() (time.Time, time.Time) {
+	now := time.Now()
+
+	dayOfWeek := int(now.Weekday())
+	if dayOfWeek == 0 {
+		dayOfWeek = 7
+	}
+
+	monday := now.AddDate(0, 0, -dayOfWeek+1)
+	sunday := now.AddDate(0, 0, 7-dayOfWeek+7)
+
+	monday = time.Date(monday.Year(), monday.Month(), monday.Day(), 0, 0, 0, 0, monday.Location())
+	sunday = time.Date(sunday.Year(), sunday.Month(), sunday.Day(), 23, 59, 59, 0, sunday.Location())
+
+	return monday, sunday
 }
