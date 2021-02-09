@@ -3,7 +3,7 @@ package scoober_test
 import (
 	"testing"
 
-	. "github.com/jonavdm/scoober-sync/internal/scoober"
+	. "github.com/jonavdm/scoober-sync/pkg/scoober"
 )
 
 func TestNewScoober(t *testing.T) {

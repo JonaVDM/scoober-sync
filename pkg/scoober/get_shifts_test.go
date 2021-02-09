@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	. "github.com/jonavdm/scoober-sync/internal/scoober"
+	. "github.com/jonavdm/scoober-sync/pkg/scoober"
 )
 
 func TestGetShifts(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/jonavdm/scoober-sync/internal/config"
-	"github.com/jonavdm/scoober-sync/internal/scoober"
+	"github.com/jonavdm/scoober-sync/pkg/scoober"
 	googleCal "google.golang.org/api/calendar/v3"
 )
 

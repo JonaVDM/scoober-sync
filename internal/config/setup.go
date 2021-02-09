@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/jonavdm/scoober-sync/internal/scoober"
+	"github.com/jonavdm/scoober-sync/pkg/scoober"
 	"golang.org/x/oauth2"
 	"google.golang.org/api/calendar/v3"
 )
