@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"time"
 )
@@ -49,11 +48,6 @@ func (g *Gotify) Send(title, message string, priority int) error {
 
 	if res.StatusCode != 200 {
 		return fmt.Errorf("Gotify Returned status code %d", res.StatusCode)
-	}
-
-	data, err = io.ReadAll(res.Body)
-	if err != nil {
-		return err
 	}
 
 	return nil
