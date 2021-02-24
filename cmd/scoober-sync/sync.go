@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/jonavdm/scoober-sync/internal/config"
-	"github.com/jonavdm/scoober-sync/internal/discord"
+	"github.com/jonavdm/scoober-sync/internal/gotify"
 	"github.com/jonavdm/scoober-sync/internal/sync"
 )
 
@@ -44,11 +44,10 @@ func main() {
 
 	log.Println(msg)
 
-	if conf.DiscordHook != "" {
-		err = discord.SendWebhook(msg)
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Println("Send message to webhook")
+	gf := gotify.Gotify{
+		URL:   conf.GotifyURL,
+		Token: conf.GotifyToken,
 	}
+
+	gf.Send("Updated Schedule", msg, 5)
 }

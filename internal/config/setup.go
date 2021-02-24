@@ -34,7 +34,12 @@ func Setup() error {
 
 	fmt.Print("\n\n")
 
-	hook, err := setupDiscordWebhook()
+	gf, err := setupGotifyURL()
+	if err != nil {
+		return err
+	}
+
+	gfToken, err := setupGotifyToken()
 	if err != nil {
 		return err
 	}
@@ -45,7 +50,8 @@ func Setup() error {
 		ScooberToken: scb,
 		GoogleToken:  gtk,
 		CalendarID:   calID,
-		DiscordHook:  hook,
+		GotifyURL:    gf,
+		GotifyToken:  gfToken,
 	}
 
 	err = config.Save()
@@ -126,14 +132,22 @@ func setupScoober() (string, error) {
 	return client.Token, err
 }
 
-func setupDiscordWebhook() (string, error) {
-	fmt.Println("Add in discord webhook (hit enter to skip)")
-	fmt.Println("https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks")
-
-	var hook string
-	if _, err := fmt.Scan(&hook); err != nil {
+func setupGotifyURL() (string, error) {
+	fmt.Println("Gotify Push URL")
+	var url string
+	if _, err := fmt.Scan(&url); err != nil {
 		return "", err
 	}
 
-	return hook, nil
+	return url, nil
+}
+
+func setupGotifyToken() (string, error) {
+	fmt.Println("Gotify Application Token")
+	var token string
+	if _, err := fmt.Scan(&token); err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
