@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/jonavdm/scoober-sync/internal/config"
 	"github.com/jonavdm/scoober-sync/internal/gotify"
@@ -50,4 +51,6 @@ func main() {
 	}
 
 	gf.Send("Updated Schedule", msg, 5)
+
+	time.Sleep(time.Second * 10)
 }
