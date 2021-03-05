@@ -50,7 +50,9 @@ func main() {
 		Token: conf.GotifyToken,
 	}
 
-	gf.Send("Updated Schedule", msg, 5)
+	if err := gf.Send("Updated Schedule", msg, 5); err != nil {
+		log.Print(err)
+	}
 
 	time.Sleep(time.Second * 10)
 }
