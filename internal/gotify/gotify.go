@@ -32,7 +32,7 @@ func (g *Gotify) Send(title, message string, priority int) error {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", g.URL+"/message", bytes.NewBuffer(data))
+	req, err := http.NewRequest("POST", "https://"+g.URL+"/message", bytes.NewBuffer(data))
 	if err != nil {
 		return err
 	}
