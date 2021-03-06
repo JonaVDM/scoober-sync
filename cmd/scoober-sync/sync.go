@@ -39,7 +39,6 @@ func main() {
 	msg := strings.Join(messages, "\n")
 
 	if msg == "" {
-		log.Println("No changed have been made")
 		return
 	}
 
