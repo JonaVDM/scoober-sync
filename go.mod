@@ -3,6 +3,7 @@ module github.com/jonavdm/scoober-sync
 go 1.15
 
 require (
+	github.com/gregdel/pushover v1.1.0 // indirect
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/oauth2 v0.0.0-20210113205817-d3ed898aa8a3

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gregdel/pushover"
 	"github.com/jonavdm/scoober-sync/internal/config"
-	"github.com/jonavdm/scoober-sync/internal/gotify"
 	"github.com/jonavdm/scoober-sync/internal/sync"
 )
 
@@ -44,13 +44,16 @@ func main() {
 
 	log.Println(msg)
 
-	gf := gotify.Gotify{
-		URL:   conf.GotifyURL,
-		Token: conf.GotifyToken,
-	}
+	if conf.PushoverApp != "" {
+		push := pushover.New(conf.PushoverApp)
+		recipient := pushover.NewRecipient(conf.PushoverUser)
 
-	if err := gf.Send("Updated Schedule", msg, 5); err != nil {
-		log.Print(err)
+		message := pushover.NewMessage(msg)
+
+		_, err := push.SendMessage(message, recipient)
+		if err != nil {
+			log.Print(err)
+		}
 	}
 
 	time.Sleep(time.Second * 10)
