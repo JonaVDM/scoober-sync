@@ -7,6 +7,6 @@ type Config struct {
 	ScooberToken string
 	GoogleToken  *oauth2.Token
 	CalendarID   string
-	GotifyURL    string
-	GotifyToken  string
+	PushoverApp  string
+	PushoverUser string
 }

@@ -34,12 +34,12 @@ func Setup() error {
 
 	fmt.Print("\n\n")
 
-	gf, err := setupGotifyURL()
+	poa, err := setupPushoverApp()
 	if err != nil {
 		return err
 	}
 
-	gfToken, err := setupGotifyToken()
+	pou, err := setupPushoverUser()
 	if err != nil {
 		return err
 	}
@@ -50,8 +50,8 @@ func Setup() error {
 		ScooberToken: scb,
 		GoogleToken:  gtk,
 		CalendarID:   calID,
-		GotifyURL:    gf,
-		GotifyToken:  gfToken,
+		PushoverApp:  poa,
+		PushoverUser: pou,
 	}
 
 	err = config.Save()
@@ -63,7 +63,7 @@ func Setup() error {
 }
 
 func setupGoogle() (*http.Client, *oauth2.Token, error) {
-	config, err := GetGoogleConfig()
+	config, _ := GetGoogleConfig()
 
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	fmt.Printf("Go to the following link in your browser then type the "+
@@ -132,8 +132,8 @@ func setupScoober() (string, error) {
 	return client.Token, err
 }
 
-func setupGotifyURL() (string, error) {
-	fmt.Println("Gotify Push URL")
+func setupPushoverApp() (string, error) {
+	fmt.Println("Pushover application token")
 	var url string
 	if _, err := fmt.Scan(&url); err != nil {
 		return "", err
@@ -142,8 +142,8 @@ func setupGotifyURL() (string, error) {
 	return url, nil
 }
 
-func setupGotifyToken() (string, error) {
-	fmt.Println("Gotify Application Token")
+func setupPushoverUser() (string, error) {
+	fmt.Println("Pushover user token")
 	var token string
 	if _, err := fmt.Scan(&token); err != nil {
 		return "", err
