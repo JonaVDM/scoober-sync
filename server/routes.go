@@ -1,6 +1,10 @@
 package server
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/jonavdm/scoober-sync/ui"
+)
 
 func (a *FactoryServer) Routes() error {
 	if a.Router == nil {
@@ -8,5 +12,6 @@ func (a *FactoryServer) Routes() error {
 	}
 
 	a.Router.HandleFunc("/ping", a.handlePing())
+	a.Router.PathPrefix("/").Handler(ui.Serve())
 	return nil
 }
