@@ -1,16 +1,13 @@
-import GoogleLogin, {
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from 'react-google-login';
+import GoogleLogin from 'react-google-login';
 
 function LoginGoogle() {
-  const onSuccess = async (
-    e: GoogleLoginResponse | GoogleLoginResponseOffline
-  ) => {
-    console.log(e);
+  const onSuccess = async (e: any) => {
+    const req = await fetch('/api/auth/google', {
+      method: 'POST',
+      body: e.tokenId,
+    });
 
-    const req = await fetch('/api/auth/google');
-    const data = req.json();
+    const data = await req.text();
 
     console.log(data);
   };
